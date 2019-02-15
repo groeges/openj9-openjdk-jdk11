@@ -37,13 +37,23 @@ void * load_crypto_library() {
 #else
     libname = "libcrypto-1_1-x64.dll"
 #endif
-
     oldname = "libeay32.dll";
 
     result = LoadLibrary(libname);
-    
     if (result == NULL) {
+        fprintf(stderr, "Failed to load library: %s\n", libname);
+        fflush(stderr);
         result = LoadLibrary(oldname);
+        if (result == NULL) {
+            fprintf(stderr, "Failed to load library: %s\n", oldname);
+            fflush(stderr);
+        } else {
+            fprintf(stderr, "Loaded library: %s\n", oldname);
+            fflush(stderr);
+        }
+    } else {
+        fprintf(stderr, "Loaded library: %s\n", libname);
+        fflush(stderr);
     }
 
     return result;
@@ -59,6 +69,9 @@ void * find_crypto_symbol(void *handle, const char *symname) {
     void * symptr;
 
     symptr =  GetProcAddress(handle, symname);
-
+    if (symptr == NULL) {
+        fprintf(stderr, "Unable to load symbol: %s\n", symname);
+        fflush(stderr);
+    }
     return symptr;
 }
