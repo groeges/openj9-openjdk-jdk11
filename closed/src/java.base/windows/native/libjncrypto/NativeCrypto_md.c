@@ -23,6 +23,7 @@
  */
 
 #include <windows.h>
+#include <stdio.h>
 
 #include "NativeCrypto_md.h"
 
