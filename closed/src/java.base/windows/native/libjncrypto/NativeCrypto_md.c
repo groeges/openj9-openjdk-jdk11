@@ -30,30 +30,48 @@
 /* Load the crypto library (return NULL on error) */
 void * load_crypto_library() {
     void * result = NULL;
-    const char *libname;
-    const char *oldname;
+    const char *libname64 = "libcrypto-1_1-x64.dll";
+    const char *libname32 = "libcrypto-1_1.dll";
+    const char *oldname = "libeay32.dll";
+    wchar_t *s = NULL;
 
-#ifdef WIN32
-    libname = "libcrypto-1_1.dll";
-#else
-    libname = "libcrypto-1_1-x64.dll"
-#endif
-    oldname = "libeay32.dll";
-
-    result = LoadLibrary(libname);
+    result = LoadLibrary(libname64);
     if (result == NULL) {
-        fprintf(stderr, "Failed to load library: %s\n", libname);
+        FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, 
+               NULL, GetLastError(),
+               MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+               (LPWSTR)&s, 0, NULL);
+        fprintf(stderr, "Failed to load library: %s, %s\n", libname64, s);
+        LocalFree(s);
         fflush(stderr);
-        result = LoadLibrary(oldname);
+        result = LoadLibrary(libname32);
         if (result == NULL) {
-            fprintf(stderr, "Failed to load library: %s\n", oldname);
+            FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, 
+                   NULL, GetLastError(),
+                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                   (LPWSTR)&s, 0, NULL);
+            fprintf(stderr, "Failed to load library: %s, %s\n", libname32, s);
+            LocalFree(s);
             fflush(stderr);
+            result = LoadLibrary(oldname);
+            if (result == NULL) {
+                FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, 
+                       NULL, GetLastError(),
+                       MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                       (LPWSTR)&s, 0, NULL);
+                fprintf(stderr, "Failed to load library: %s, %s\n", oldname, s);
+                LocalFree(s);
+                fflush(stderr);
+            } else {
+                fprintf(stderr, "Loaded library: %s\n", oldname);
+                fflush(stderr);
+            }
         } else {
-            fprintf(stderr, "Loaded library: %s\n", oldname);
+            fprintf(stderr, "Loaded library: %s\n", libname32);
             fflush(stderr);
         }
     } else {
-        fprintf(stderr, "Loaded library: %s\n", libname);
+        fprintf(stderr, "Loaded library: %s\n", libname64);
         fflush(stderr);
     }
 
