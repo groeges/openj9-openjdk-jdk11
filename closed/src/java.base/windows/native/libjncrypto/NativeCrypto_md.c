@@ -33,34 +33,18 @@ void * load_crypto_library() {
     const char *libname64 = "libcrypto-1_1-x64.dll";
     const char *libname32 = "libcrypto-1_1.dll";
     const char *oldname = "libeay32.dll";
-    wchar_t *s = NULL;
 
     result = LoadLibrary(libname64);
     if (result == NULL) {
-        FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, 
-               NULL, GetLastError(),
-               MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-               (LPWSTR)&s, 0, NULL);
-        fprintf(stderr, "Failed to load library: %s, %s\n", libname64, s);
-        LocalFree(s);
+        fprintf(stderr, "Failed to load library: %s\n", libname64);
         fflush(stderr);
         result = LoadLibrary(libname32);
         if (result == NULL) {
-            FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, 
-                   NULL, GetLastError(),
-                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                   (LPWSTR)&s, 0, NULL);
-            fprintf(stderr, "Failed to load library: %s, %s\n", libname32, s);
-            LocalFree(s);
+            fprintf(stderr, "Failed to load library: %s\n", libname32);
             fflush(stderr);
             result = LoadLibrary(oldname);
             if (result == NULL) {
-                FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, 
-                       NULL, GetLastError(),
-                       MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                       (LPWSTR)&s, 0, NULL);
-                fprintf(stderr, "Failed to load library: %s, %s\n", oldname, s);
-                LocalFree(s);
+                fprintf(stderr, "Failed to load library: %s\n", oldname);
                 fflush(stderr);
             } else {
                 fprintf(stderr, "Loaded library: %s\n", oldname);
