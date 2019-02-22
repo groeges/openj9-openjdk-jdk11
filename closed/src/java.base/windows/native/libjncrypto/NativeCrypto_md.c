@@ -30,32 +30,29 @@
 /* Load the crypto library (return NULL on error) */
 void * load_crypto_library() {
     void * result = NULL;
-    const char *libname64 = "libcrypto-1_1-x64.dll";
-    const char *libname32 = "libcrypto-1_1.dll";
+    const char *libname;
     const char *oldname = "libeay32.dll";
+    
+#ifdef WIN32
+    libname = "libcrypto-1_1.dll";
+#else
+    libname = "libcrypto-1_1-x64.dll"
+#endif
 
-    result = LoadLibrary(libname64);
+    result = LoadLibrary(libname);
     if (result == NULL) {
-        fprintf(stderr, "Failed to load library: %s\n", libname64);
+        fprintf(stderr, "Failed to load library: %s\n", libname);
         fflush(stderr);
-        result = LoadLibrary(libname32);
+        result = LoadLibrary(oldname);
         if (result == NULL) {
-            fprintf(stderr, "Failed to load library: %s\n", libname32);
+            fprintf(stderr, "Failed to load library: %s\n", oldname);
             fflush(stderr);
-            result = LoadLibrary(oldname);
-            if (result == NULL) {
-                fprintf(stderr, "Failed to load library: %s\n", oldname);
-                fflush(stderr);
-            } else {
-                fprintf(stderr, "Loaded library: %s\n", oldname);
-                fflush(stderr);
-            }
         } else {
-            fprintf(stderr, "Loaded library: %s\n", libname32);
+            fprintf(stderr, "Loaded library: %s\n", oldname);
             fflush(stderr);
         }
     } else {
-        fprintf(stderr, "Loaded library: %s\n", libname64);
+        fprintf(stderr, "Loaded library: %s\n", libname);
         fflush(stderr);
     }
 
