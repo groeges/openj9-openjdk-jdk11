@@ -30,14 +30,8 @@
 /* Load the crypto library (return NULL on error) */
 void * load_crypto_library() {
     void * result = NULL;
-    const char *libname;
+    const char *libname = "libcrypto-1_1-x64.dll";
     const char *oldname = "libeay32.dll";
-    
-#ifdef WIN64
-    libname = "libcrypto-1_1-x64.dll";
-#else
-    libname = "libcrypto-1_1.dll";
-#endif
 
     result = LoadLibrary(libname);
     if (result == NULL) {
