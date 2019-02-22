@@ -36,7 +36,7 @@ void * load_crypto_library() {
 #ifdef WIN64
     libname = "libcrypto-1_1-x64.dll";
 #else
-    libname = "libcrypto-1_1.dll"
+    libname = "libcrypto-1_1.dll";
 #endif
 
     result = LoadLibrary(libname);
