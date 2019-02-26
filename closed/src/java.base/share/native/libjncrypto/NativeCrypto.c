@@ -193,16 +193,16 @@ JNIEXPORT jint JNICALL Java_jdk_crypto_jniprovider_NativeCrypto_loadCrypto
         OSSL_version = (OSSL_version_t*)find_crypto_symbol(handle, "SSLeay_version");
 
         if (OSSL_version == NULL)  {
-            //fprintf(stderr, "Only openssl 1.0.2 and 1.1.0 and 1.1.1 are supported\n");
-            //fflush(stderr);
+            fprintf(stderr, "Only openssl 1.0.2 and 1.1.0 and 1.1.1 are supported\n");
+            fflush(stderr);
             unload_crypto_library(handle);
             return -1;
         } else {
             openssl_version = (*OSSL_version)(0); //get OPENSSL_VERSION
             //Ensure the OpenSSL version is "OpenSSL 1.0.2"
             if (strncmp(openssl_version, "OpenSSL 1.0.2", 13) != 0) {
-                //fprintf(stderr, "Incompatable OpenSSL version: %s\n", openssl_version);
-                //fflush(stderr);
+                fprintf(stderr, "Incompatable OpenSSL version: %s\n", openssl_version);
+                fflush(stderr);
                 unload_crypto_library(handle);
                 return -1;
             }
@@ -213,8 +213,8 @@ JNIEXPORT jint JNICALL Java_jdk_crypto_jniprovider_NativeCrypto_loadCrypto
         //Ensure the OpenSSL version is "OpenSSL 1.1.0" or "OpenSSL 1.1.0".
         if (strncmp(openssl_version, "OpenSSL 1.1.0", 13) != 0 &&
             strncmp(openssl_version, "OpenSSL 1.1.1", 13) != 0) {
-            //fprintf(stderr, "Incompatable OpenSSL version: %s\n", openssl_version);
-            //fflush(stderr);
+            fprintf(stderr, "Incompatable OpenSSL version: %s\n", openssl_version);
+            fflush(stderr);
             unload_crypto_library(handle);
             return -1;
         }
